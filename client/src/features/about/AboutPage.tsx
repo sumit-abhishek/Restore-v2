@@ -13,6 +13,16 @@ const AboutPage = () => {
   const [trigger404Error] = useLazyGet404ErrorQuery();
   const [trigger500Error] = useLazyGet500ErrorQuery();
   const [triggerValidationError] = useLazyGetValidationErrorQuery();
+
+  const getValidationError = async () => {
+    try {
+      await triggerValidationError().unwrap();
+    } catch (error: any) {
+      const errorArray = error.message.split(", ");
+      console.log(error);
+    }
+  };
+
   return (
     <Container maxWidth="lg">
       <Typography gutterBottom variant="h3">
@@ -46,7 +56,9 @@ const AboutPage = () => {
         <Button
           variant="contained"
           onClick={() =>
-            triggerValidationError().catch((err) => console.log(err))
+            triggerValidationError()
+              .unwrap()
+              .catch((err) => console.log(err))
           }
         >
           Test Validation Error
