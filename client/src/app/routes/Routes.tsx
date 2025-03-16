@@ -1,6 +1,7 @@
 import {
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate,
   Route,
 } from "react-router-dom";
 import App from "../layout/App";
@@ -9,6 +10,8 @@ import Catalog from "../../features/catalog/Catalog";
 import ProductDetails from "../../features/catalog/ProductDetails";
 import ContactPage from "../../features/contact/ContactPage";
 import AboutPage from "../../features/about/AboutPage";
+import ServerError from "../error/ServerError";
+import NotFound from "../error/NotFound";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,6 +21,9 @@ export const router = createBrowserRouter(
       <Route path="/catalog/:id" element={<ProductDetails />} />
       <Route path="about" element={<AboutPage />} />
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="/server-error" element={<ServerError />} />
+      <Route path="/not-found" element={<NotFound />} />
+      <Route path="*" element={<Navigate replace to="/not-found" />} />
     </Route>
   )
 );

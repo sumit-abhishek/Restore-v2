@@ -1,4 +1,13 @@
-import { Button, ButtonGroup, Container, Typography } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  ButtonGroup,
+  Container,
+  List,
+  ListItem,
+  Typography,
+} from "@mui/material";
 import {
   useLazyGet400ErrorQuery,
   useLazyGet401ErrorQuery,
@@ -6,6 +15,7 @@ import {
   useLazyGet500ErrorQuery,
   useLazyGetValidationErrorQuery,
 } from "./errorApi";
+import { useState } from "react";
 
 const AboutPage = () => {
   const [trigger400Error] = useLazyGet400ErrorQuery();
@@ -14,12 +24,20 @@ const AboutPage = () => {
   const [trigger500Error] = useLazyGet500ErrorQuery();
   const [triggerValidationError] = useLazyGetValidationErrorQuery();
 
+  const [validationError, setValidationError] = useState<string[]>([]);
   const getValidationError = async () => {
     try {
       await triggerValidationError().unwrap();
-    } catch (error: any) {
-      const errorArray = error.message.split(", ");
-      console.log(error);
+    } catch (error: unknown) {
+      if (
+        error &&
+        typeof error === "object" &&
+        "message" in error &&
+        typeof (error as { message: unknown }).message === "string"
+      ) {
+        const errorArray = (error as { message: string }).message.split(", ");
+        setValidationError(errorArray);
+      }
     }
   };
 
@@ -53,17 +71,20 @@ const AboutPage = () => {
         >
           Test 500 Error
         </Button>
-        <Button
-          variant="contained"
-          onClick={() =>
-            triggerValidationError()
-              .unwrap()
-              .catch((err) => console.log(err))
-          }
-        >
+        <Button variant="contained" onClick={getValidationError}>
           Test Validation Error
         </Button>
       </ButtonGroup>
+      {validationError.length > 0 && (
+        <Alert severity="error">
+          <AlertTitle>Validation Errors</AlertTitle>
+          <List>
+            {validationError.map((err) => (
+              <ListItem key={err}>{err}</ListItem>
+            ))}
+          </List>
+        </Alert>
+      )}
     </Container>
   );
 };
