@@ -5,7 +5,7 @@ namespace API.Entities;
 public class Basket
 {
 public int Id { get; set; }
-public int BasketId { get; set; }
+public required string BasketId { get; set; }
 public List<BasketItem> Items { get; set; }=[];
 public void AddItem(Product product, int quantity)
 {

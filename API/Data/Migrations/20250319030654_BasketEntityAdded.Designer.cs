@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20250319024222_BasketEntityAdded")]
+    [Migration("20250319030654_BasketEntityAdded")]
     partial class BasketEntityAdded
     {
         /// <inheritdoc />
@@ -25,12 +25,13 @@ namespace API.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("BasketId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("BasketId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Basket");
+                    b.ToTable("Baskets");
                 });
 
             modelBuilder.Entity("API.Entities.BasketItem", b =>
