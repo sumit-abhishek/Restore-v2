@@ -3,6 +3,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,7 +39,16 @@ public class BasketController(StoreContext context) : BaseApiController
         return BadRequest("Problem Updating Basket");
     }
 
-
+    [HttpDelete]
+    public async Task<ActionResult>RemoveBAsketItem(int productId, int quantity)
+    {
+        var basket=await RetrieveBasket();
+        if(basket==null) return BadRequest("Unable to retrieve basket");
+        basket.RemoveIem(productId,quantity);
+        var result= await context.SaveChangesAsync()>0;
+        if(result) return Ok();
+        return BadRequest("Problem Updating Basket");
+    }
     private async Task<Basket?> RetrieveBasket()
     {
         return await context.Baskets
