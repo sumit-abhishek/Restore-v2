@@ -14,10 +14,8 @@ public class BasketController(StoreContext context) : BaseApiController
     [HttpGet]
     public async Task<ActionResult<BasketDto>> GetBasket()
     {
-        var basket = await RetrieveBasket();  
-
-        if (basket == null) NoContent();
-
+        var basket = await RetrieveBasket();
+        if(basket==null) return NoContent();
         return basket.ToDto();
     }
 

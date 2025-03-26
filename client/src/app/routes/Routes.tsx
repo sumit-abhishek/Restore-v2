@@ -12,6 +12,7 @@ import ContactPage from "../../features/contact/ContactPage";
 import AboutPage from "../../features/about/AboutPage";
 import ServerError from "../error/ServerError";
 import NotFound from "../error/NotFound";
+import BasketPage from "../../features/basket/BasketPage";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +22,7 @@ export const router = createBrowserRouter(
       <Route path="/catalog/:id" element={<ProductDetails />} />
       <Route path="about" element={<AboutPage />} />
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="/basket" element={<BasketPage />} />
       <Route path="/server-error" element={<ServerError />} />
       <Route path="/not-found" element={<NotFound />} />
       <Route path="*" element={<Navigate replace to="/not-found" />} />
