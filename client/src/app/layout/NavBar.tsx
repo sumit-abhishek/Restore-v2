@@ -13,6 +13,7 @@ import {
 import { Link, NavLink } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { setDarkMode } from "./uiSlice";
+import { useFetchBasketQuery } from "../../features/basket/basketApi";
 
 const navStyles = {
   color: "inherit",
@@ -39,6 +40,9 @@ const rightLinks = [
 
 const NavBar = () => {
   const dispatch = useAppDispatch();
+  const { data: basket } = useFetchBasketQuery();
+  const itemCount =
+    basket?.items.reduce((sum, item) => sum + item.quantity, 0) || 0;
   const { isLoading, darkMode } = useAppSelector((state) => state.ui);
   return (
     <AppBar position="fixed">
@@ -79,7 +83,7 @@ const NavBar = () => {
             size="large"
             sx={{ color: "inherit" }}
           >
-            <Badge badgeContent="4" color="secondary">
+            <Badge badgeContent={itemCount} color="secondary">
               <ShoppingCart></ShoppingCart>
             </Badge>
           </IconButton>
