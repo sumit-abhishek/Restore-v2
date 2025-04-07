@@ -3,6 +3,7 @@ import { Item } from "../../app/models/basket";
 import { Box } from "@mui/system";
 import { Add, Close, Remove } from "@mui/icons-material";
 import { useAddBasketItemMutation, useRemoveBasketMutation } from "./basketApi";
+import { currencyFormat } from "../../lib/util";
 
 type Props = {
   item: Item;
@@ -39,10 +40,10 @@ const BasketItem = ({ item }: Props) => {
           <Typography variant="h6">{item.name}</Typography>
           <Box display="flex" alignItems="center" gap={3}>
             <Typography sx={{ fontSize: "1.1rem" }}>
-              ${(item.price / 100).toFixed(2)} x {item.quantity}
+              {currencyFormat(item.price)} x {item.quantity}
             </Typography>
             <Typography sx={{ fontSize: "1.1rem" }}>
-              ${((item.price / 100) * item.quantity).toFixed(2)}
+              {currencyFormat(item.price * item.quantity)}
             </Typography>
           </Box>
           <Grid2 container spacing={1} alignItems="center">
