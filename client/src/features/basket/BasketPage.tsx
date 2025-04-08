@@ -6,7 +6,8 @@ import OrderSummary from "../../app/shared/components/OrderSummary";
 const BasketPage = () => {
   const { data, isLoading } = useFetchBasketQuery();
   if (isLoading) return <Typography>Loading Basket...</Typography>;
-  if (!data) return <Typography variant="h3">Your Basket is Empty</Typography>;
+  if (!data || data.items.length === 0)
+    return <Typography variant="h3">Your Basket is Empty</Typography>;
   return (
     <Grid2 container spacing={2}>
       <Grid2 size={8}>
