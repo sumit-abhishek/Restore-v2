@@ -12,9 +12,13 @@ namespace API.Controllers
         private readonly StoreContext context = context;
 
         [HttpGet]
-        public async Task <ActionResult<List<Product>>> GetProducts(string orderBy)
+        public async Task <ActionResult<List<Product>>> GetProducts(
+            string? orderBy,
+            string? searchTerm
+            )
         {
             var query=context.Products
+            .Search(searchTerm)
             .Sort(orderBy)
             .AsQueryable();      
             return await query.ToListAsync();
