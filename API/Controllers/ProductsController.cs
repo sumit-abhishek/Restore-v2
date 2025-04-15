@@ -13,24 +13,28 @@ namespace API.Controllers
         private readonly StoreContext context = context;
 
         [HttpGet]
-        public async Task <ActionResult<List<Product>>> GetProducts(
+        public async Task<ActionResult<List<Product>>> GetProducts(
             [FromQuery] ProductParams productParams
             )
         {
-            var query=context.Products
+            var query = context.Products
             .Search(productParams.SearchTerm)
             .Sort(productParams.OrderBy)
-            .Filter(productParams.Brands,productParams.Types)
-            .AsQueryable();      
-            return await query.ToListAsync();
+            .Filter(productParams.Brands, productParams.Types)
+            .AsQueryable();
+
+            var product = await PagedList<Product>.ToPagedList(query, productParams.PageNumber, productParams.PageSize);
+            Response.AddPaginationHeader(product.Metadata);
+
+            return product;
         }
 
         [HttpGet("{id}")]
-    public async Task<ActionResult<Product>> GetProductById(int id)
-    {
-        var product = await context.Products.FindAsync(id);
-        if(product == null) return NotFound();
-        return product;
-    }
+        public async Task<ActionResult<Product>> GetProductById(int id)
+        {
+            var product = await context.Products.FindAsync(id);
+            if (product == null) return NotFound();
+            return product;
+        }
     }
 }
