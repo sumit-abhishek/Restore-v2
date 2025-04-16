@@ -20,7 +20,7 @@ const ProductCard = ({ product }: Props) => {
     <Card
       elevation={3}
       sx={{
-        width: 200,
+        width: 280,
         borderRadius: 2,
         display: "flex",
         flexDirection: "column",
