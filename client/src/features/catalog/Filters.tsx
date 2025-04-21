@@ -5,10 +5,10 @@ import {
   FormGroup,
   Paper,
   Radio,
-  TextField,
 } from "@mui/material";
 import { useFetchFiltersQuery } from "./catalogApi";
 import { CheckBox } from "@mui/icons-material";
+import Search from "./Search";
 
 const sortOptions = [
   { value: "name", lable: "Alphabetically" },
@@ -18,11 +18,10 @@ const sortOptions = [
 
 export default function Filters() {
   const { data } = useFetchFiltersQuery();
-  console.log(data);
   return (
     <Box display="flex" flexDirection="column" gap={3}>
       <Paper>
-        <TextField label="Search Products" variant="outlined" fullWidth />
+        <Search />
       </Paper>
       <Paper sx={{ p: 3 }}>
         <FormControl>
