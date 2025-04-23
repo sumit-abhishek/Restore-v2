@@ -1,14 +1,10 @@
-import {
-  Box,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Paper,
-  Radio,
-} from "@mui/material";
+import { Box, FormControlLabel, FormGroup, Paper } from "@mui/material";
 import { useFetchFiltersQuery } from "./catalogApi";
 import { CheckBox } from "@mui/icons-material";
 import Search from "./Search";
+import RadioButtonGroup from "../../app/shared/components/RadioButtonGroup";
+import { useAppDispatch, useAppSelector } from "../../app/store/store";
+import { setOrderBy } from "./catalogSlice";
 
 const sortOptions = [
   { value: "name", lable: "Alphabetically" },
@@ -18,22 +14,19 @@ const sortOptions = [
 
 export default function Filters() {
   const { data } = useFetchFiltersQuery();
+  const { orderBy } = useAppSelector((state) => state.catalog);
+  const dispatch = useAppDispatch();
   return (
     <Box display="flex" flexDirection="column" gap={3}>
       <Paper>
         <Search />
       </Paper>
       <Paper sx={{ p: 3 }}>
-        <FormControl>
-          {sortOptions.map(({ value, lable }) => (
-            <FormControlLabel
-              key={lable}
-              control={<Radio sx={{ py: 0.7 }} />}
-              label={lable}
-              value={value}
-            />
-          ))}
-        </FormControl>
+        <RadioButtonGroup
+          options={sortOptions}
+          onChange={(e) => dispatch(setOrderBy(e.target.value))}
+          selectedValue={orderBy}
+        />
       </Paper>
       <Paper sx={{ p: 3 }}>
         <FormGroup>
