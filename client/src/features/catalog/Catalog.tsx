@@ -1,5 +1,5 @@
 import { Grid2, Typography } from "@mui/material";
-import { useFetchProductsQuery } from "./catalogApi";
+import { useFetchFiltersQuery, useFetchProductsQuery } from "./catalogApi";
 import ProductList from "./ProductList";
 import Filters from "./Filters";
 import { useAppDispatch, useAppSelector } from "../../app/store/store";
@@ -9,13 +9,16 @@ import { setPageNumber } from "./catalogSlice";
 const Catalog = () => {
   const productParams = useAppSelector((state) => state.catalog);
   const { data, isLoading } = useFetchProductsQuery(productParams);
+  const { data: filtersData, isLoading: filtersLoading } =
+    useFetchFiltersQuery();
   const dispatch = useAppDispatch();
-  if (isLoading || !data) return <div>Loading...</div>;
+  if (isLoading || !data || !filtersData || filtersLoading)
+    return <div>Loading...</div>;
 
   return (
     <Grid2 container spacing={4}>
       <Grid2 size={3}>
-        <Filters />
+        <Filters filtersData={filtersData} />
       </Grid2>
       <Grid2 size={9}>
         {data.items && data.items.length > 0 ? (
@@ -23,7 +26,10 @@ const Catalog = () => {
             <ProductList products={data.items} />
             <AppPagination
               metadata={data.pagination}
-              onPageChange={(page: number) => dispatch(setPageNumber(page))}
+              onPageChange={(page: number) => {
+                dispatch(setPageNumber(page));
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
             />
           </>
         ) : (
