@@ -1,5 +1,6 @@
 using System;
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
@@ -8,19 +9,45 @@ public class DbInitializer
 {
     public static void InitDb(WebApplication app)
     {
-        using var scope= app.Services.CreateScope();
-        var context= scope.ServiceProvider.GetRequiredService<StoreContext>()
+        using var scope = app.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<StoreContext>()
         ?? throw new InvalidOperationException("Faild to retrieve store context");
-        SeedData(context);
+
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>()
+        ?? throw new InvalidOperationException("Faild to retrieve user manager");
+        
+        SeedData(context, userManager);
     }
 
-    private static void SeedData(StoreContext context)
+    private static async void SeedData(StoreContext context, UserManager<User> userManager)
     {
         context.Database.Migrate();
-        if(context.Products.Any()) return;
-        var products=new List<Product>
+
+        if (!userManager.Users.Any())
         {
-            		new() {
+            var user = new User
+            {
+                UserName = "bob@test.com",
+                Email = "bob@test.com"
+            };
+
+            await userManager.CreateAsync(user, "Pa$$w0rd");
+            await userManager.AddToRoleAsync(user, "Member");
+
+            var admin = new User
+            {
+                UserName = "admin@test.com",
+                Email = "admin@test.com"
+            };
+
+            await userManager.CreateAsync(user, "Pa$$w0rd");
+            await userManager.AddToRolesAsync(user, ["Member", "Admin"]);
+        }
+
+        if (context.Products.Any()) return;
+        var products = new List<Product>
+        {
+                    new() {
                     Name = "Angular Speedster Board 2000",
                     Description =
                         "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.",
