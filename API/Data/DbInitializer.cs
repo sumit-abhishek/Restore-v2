@@ -40,8 +40,8 @@ public class DbInitializer
                 Email = "admin@test.com"
             };
 
-            await userManager.CreateAsync(user, "Pa$$w0rd");
-            await userManager.AddToRolesAsync(user, ["Member", "Admin"]);
+            await userManager.CreateAsync(admin, "Pa$$w0rd");
+            await userManager.AddToRolesAsync(admin, ["Member", "Admin"]);
         }
 
         if (context.Products.Any()) return;
