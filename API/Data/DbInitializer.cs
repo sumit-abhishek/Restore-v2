@@ -15,7 +15,7 @@ public class DbInitializer
 
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>()
         ?? throw new InvalidOperationException("Faild to retrieve user manager");
-        
+
         SeedData(context, userManager);
     }
 
