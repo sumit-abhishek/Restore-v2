@@ -186,8 +186,8 @@ namespace API.Data.Migrations
                         new
                         {
                             Id = "de43704b-1851-4433-a51a-58eefbd264b3",
-                            Name = "Memeber",
-                            NormalizedName = "MEMEBER"
+                            Name = "Member",
+                            NormalizedName = "MEMBER"
                         },
                         new
                         {

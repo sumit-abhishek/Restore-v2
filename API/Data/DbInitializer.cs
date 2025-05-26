@@ -11,10 +11,10 @@ public class DbInitializer
     {
         using var scope = app.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<StoreContext>()
-        ?? throw new InvalidOperationException("Faild to retrieve store context");
+        ?? throw new InvalidOperationException("Failed to retrieve store context");
 
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>()
-        ?? throw new InvalidOperationException("Faild to retrieve user manager");
+        ?? throw new InvalidOperationException("Failed to retrieve user manager");
 
         SeedData(context, userManager);
     }

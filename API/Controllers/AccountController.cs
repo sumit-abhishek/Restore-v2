@@ -21,7 +21,7 @@ public class AccountController(SignInManager<User> signInManager) : BaseApiContr
             }
             return ValidationProblem();
         }
-        await signInManager.UserManager.AddToRoleAsync(user, "Memeber");
+        await signInManager.UserManager.AddToRoleAsync(user, "Member");
         return Ok();
     }
 

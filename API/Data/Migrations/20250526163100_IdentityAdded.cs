@@ -164,7 +164,7 @@ namespace API.Data.Migrations
                 values: new object[,]
                 {
                     { "8d619712-d977-4c53-9aed-c8d224bf2571", null, "Admin", "ADMIN" },
-                    { "de43704b-1851-4433-a51a-58eefbd264b3", null, "Memeber", "MEMEBER" }
+                    { "de43704b-1851-4433-a51a-58eefbd264b3", null, "Member", "MEMBER" }
                 });
 
             migrationBuilder.CreateIndex(
