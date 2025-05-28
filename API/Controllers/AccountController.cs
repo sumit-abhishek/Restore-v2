@@ -1,8 +1,10 @@
 using System;
 using API.DTOs;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
@@ -46,4 +48,35 @@ public class AccountController(SignInManager<User> signInManager) : BaseApiContr
         await signInManager.SignOutAsync();
         return NoContent();
     }
+
+    [HttpPost("address")]
+    public async Task<ActionResult<Address>> CreateOrUpdateAddress(Address address)
+    {
+        var user = await signInManager.UserManager.Users.Include(x => x.Address)
+        .FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
+
+        if (user == null) return Unauthorized();
+
+        user.Address = address;
+
+        var result = await signInManager.UserManager.UpdateAsync(user);
+
+        if (!result.Succeeded) return BadRequest("Problem Updating User Address");
+
+        return Ok(user.Address);
+    }
+
+    [Authorize]
+    [HttpGet("address")]
+    public async Task<ActionResult<Address>> GetSavedAddress()
+    {
+        var address = await signInManager.UserManager.Users.Where(x => x.UserName == User.Identity!.Name)
+        .Select(x => x.Address).FirstOrDefaultAsync();
+
+        if (address == null) return NoContent();
+
+        return address;
+    }
+
+
 }
