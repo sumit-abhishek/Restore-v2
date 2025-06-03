@@ -9,18 +9,24 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { data, Link } from "react-router-dom";
-import { LoginSchema } from "../../lib/schemas/loginSchema";
+import { Link } from "react-router-dom";
+import { loginSchema, LoginSchema } from "../../lib/schemas/loginSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useLoginMutation } from "./accountApi";
 
 export default function LoginForm() {
+  const [login, { isLoading }] = useLoginMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginSchema>();
+  } = useForm<LoginSchema>({
+    mode: "onTouched",
+    resolver: zodResolver(loginSchema),
+  });
 
-  const onSubmit = (data: LoginSchema) => {
-    console.log(data);
+  const onSubmit = async (data: LoginSchema) => {
+    await login(data);
   };
   return (
     <Container component={Paper} maxWidth="sm" sx={{ borderRadius: 3 }}>
@@ -45,7 +51,7 @@ export default function LoginForm() {
             fullWidth
             label="Email"
             type="email"
-            {...register("email", { required: "Email is Required" })}
+            {...register("email")}
             error={!!errors.email}
             helperText={errors.email?.message}
           />
@@ -53,11 +59,11 @@ export default function LoginForm() {
             fullWidth
             label="Password"
             type="password"
-            {...register("password", { required: "Password is Required" })}
+            {...register("password")}
             error={!!errors.password}
             helperText={errors.password?.message}
           />
-          <Button variant="contained" type="submit">
+          <Button variant="contained" type="submit" disabled={isLoading}>
             Sign In
           </Button>
           <Typography sx={{ textAlign: "center" }}>
