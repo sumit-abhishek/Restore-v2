@@ -1,4 +1,6 @@
 import { LockOutlined } from "@mui/icons-material";
+import { useForm } from "react-hook-form";
+
 import {
   Box,
   Button,
@@ -7,9 +9,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { data, Link } from "react-router-dom";
+import { LoginSchema } from "../../lib/schemas/loginSchema";
 
 export default function LoginForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginSchema>();
+
+  const onSubmit = (data: LoginSchema) => {
+    console.log(data);
+  };
   return (
     <Container component={Paper} maxWidth="sm" sx={{ borderRadius: 3 }}>
       <Box
@@ -27,10 +39,27 @@ export default function LoginForm() {
           flexDirection="column"
           gap={3}
           marginY={3}
+          onSubmit={handleSubmit(onSubmit)}
         >
-          <TextField fullWidth label="Email" type="email" />
-          <TextField fullWidth label="Password" type="password" />
-          <Button variant="contained">Sign In</Button>
+          <TextField
+            fullWidth
+            label="Email"
+            type="email"
+            {...register("email", { required: "Email is Required" })}
+            error={!!errors.email}
+            helperText={errors.email?.message}
+          />
+          <TextField
+            fullWidth
+            label="Password"
+            type="password"
+            {...register("password", { required: "Password is Required" })}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+          />
+          <Button variant="contained" type="submit">
+            Sign In
+          </Button>
           <Typography sx={{ textAlign: "center" }}>
             Don't have an Account?
             <Typography sx={{ ml: 2 }} component={Link} to="/register">
