@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { setDarkMode } from "./uiSlice";
 import { useFetchBasketQuery } from "../../features/basket/basketApi";
 import UserMenu from "./UserMenu";
+import { useUserInfoQuery } from "../../features/account/accountApi";
 
 const navStyles = {
   color: "inherit",
@@ -40,7 +41,8 @@ const rightLinks = [
 ];
 
 const NavBar = () => {
-  const user = { email: "test@test.com", roles: [] };
+  const { data: user } = useUserInfoQuery();
+  console.log("USer", user);
   const dispatch = useAppDispatch();
   const { data: basket } = useFetchBasketQuery();
   const itemCount =

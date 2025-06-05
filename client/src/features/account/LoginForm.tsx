@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginSchema, LoginSchema } from "../../lib/schemas/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLoginMutation } from "./accountApi";
@@ -25,8 +25,10 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
+  const navigate = useNavigate();
   const onSubmit = async (data: LoginSchema) => {
     await login(data);
+    navigate("/catalog");
   };
   return (
     <Container component={Paper} maxWidth="sm" sx={{ borderRadius: 3 }}>

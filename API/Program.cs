@@ -20,6 +20,15 @@ builder.Services.AddIdentityApiEndpoints<User>(opt =>
     opt.User.RequireUniqueEmail = true;
 }).AddRoles<IdentityRole>().AddEntityFrameworkStores<StoreContext>();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.None;           // For cross-origin cookies
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;  // Requires HTTPS
+    options.Cookie.Name = ".AspNetCore.Identity.Application"; // Default cookie name
+    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    options.SlidingExpiration = true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
