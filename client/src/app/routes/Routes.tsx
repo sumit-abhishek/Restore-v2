@@ -15,6 +15,7 @@ import NotFound from "../error/NotFound";
 import BasketPage from "../../features/basket/BasketPage";
 import { CheckoutPage } from "../../features/checkout/CheckoutPage";
 import LoginForm from "../../features/account/LoginForm";
+import RegistrationForm from "../../features/account/RegistrationForm";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,6 +29,7 @@ export const router = createBrowserRouter(
       <Route path="checkout" element={<CheckoutPage />} />
       <Route path="server-error" element={<ServerError />} />
       <Route path="login" element={<LoginForm />} />
+      <Route path="register" element={<RegistrationForm />} />
       <Route path="not-found" element={<NotFound />} />
       <Route path="*" element={<Navigate replace to="/not-found" />} />
     </Route>
