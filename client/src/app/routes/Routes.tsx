@@ -16,22 +16,39 @@ import BasketPage from "../../features/basket/BasketPage";
 import { CheckoutPage } from "../../features/checkout/CheckoutPage";
 import LoginForm from "../../features/account/LoginForm";
 import RegistrationForm from "../../features/account/RegistrationForm";
+import RequiredAuth from "./RequiredAuth";
 
 export const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      <Route path="" element={<HomePage />} />
-      <Route path="catalog/:id" element={<ProductDetails />} />
-      <Route path="catalog" element={<Catalog />} />
-      <Route path="about" element={<AboutPage />} />
-      <Route path="contact" element={<ContactPage />} />
-      <Route path="basket" element={<BasketPage />} />
-      <Route path="checkout" element={<CheckoutPage />} />
-      <Route path="server-error" element={<ServerError />} />
-      <Route path="login" element={<LoginForm />} />
-      <Route path="register" element={<RegistrationForm />} />
-      <Route path="not-found" element={<NotFound />} />
-      <Route path="*" element={<Navigate replace to="/not-found" />} />
-    </Route>
-  )
+  [
+    {
+      path: "/",
+      element: <App />,
+      children: [
+        {
+          element: <RequiredAuth />,
+          children: [{ path: "checkout", element: <CheckoutPage /> }],
+        },
+        { path: "", element: <HomePage /> },
+        { path: "catalog", element: <Catalog /> },
+        { path: "catalog/:id", element: <ProductDetails /> },
+        { path: "about", element: <AboutPage /> },
+        { path: "contact", element: <ContactPage /> },
+        { path: "basket", element: <BasketPage /> },
+        { path: "server-error", element: <ServerError /> },
+        { path: "login", element: <LoginForm /> },
+        { path: "register", element: <RegistrationForm /> },
+        { path: "not-found", element: <NotFound /> },
+        { path: "*", element: <Navigate replace to="/not-found" /> },
+      ],
+    },
+  ],
+  {
+    future: {
+      v7_relativeSplatPath: true,
+      v7_fetcherPersist: true,
+      v7_normalizeFormMethod: true,
+      v7_partialHydration: true,
+      v7_skipActionErrorRevalidation: true,
+    },
+  }
 );

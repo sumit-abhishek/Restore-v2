@@ -9,13 +9,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { loginSchema, LoginSchema } from "../../lib/schemas/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLoginMutation } from "./accountApi";
+import { useLazyUserInfoQuery, useLoginMutation } from "./accountApi";
 
 export default function LoginForm() {
   const [login, { isLoading }] = useLoginMutation();
+  const location = useLocation();
   const {
     register,
     handleSubmit,
@@ -26,9 +27,11 @@ export default function LoginForm() {
   });
 
   const navigate = useNavigate();
+  const [fetchUserInfo] = useLazyUserInfoQuery();
   const onSubmit = async (data: LoginSchema) => {
     await login(data);
-    navigate("/catalog");
+    await fetchUserInfo();
+    navigate(location.state.from || "/catalog");
   };
   return (
     <Container component={Paper} maxWidth="sm" sx={{ borderRadius: 3 }}>

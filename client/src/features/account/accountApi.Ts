@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithErrorHandling } from "../../app/api/baseApi";
 import { User } from "../../app/models/user";
+import { router } from "../../app/routes/Routes";
 export const accountApi = createApi({
   reducerPath: "accountApi",
   baseQuery: baseQueryWithErrorHandling,
@@ -44,6 +45,7 @@ export const accountApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         await queryFulfilled;
         dispatch(accountApi.util.invalidateTags(["UserInfo"]));
+        router.navigate("/");
       },
     }),
   }),
@@ -54,4 +56,5 @@ export const {
   useLogoutMutation,
   useRegisterMutation,
   useUserInfoQuery,
+  useLazyUserInfoQuery,
 } = accountApi;

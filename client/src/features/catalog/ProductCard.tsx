@@ -49,7 +49,7 @@ const ProductCard = ({ product }: Props) => {
           disabled={isLoading}
           onClick={() => addBasketItem({ product, quantity: 1 })}
         >
-          Add to Card
+          Add to Cart
         </Button>
         <Button component={Link} to={`/catalog/${product.id}`}>
           View
