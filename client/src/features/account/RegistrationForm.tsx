@@ -21,6 +21,7 @@ export default function RegistrationForm() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isValid, isLoading },
   } = useForm<RegistrationSchema>({
     mode: "onTouched",
@@ -28,7 +29,21 @@ export default function RegistrationForm() {
   });
 
   const onSubmit = async (data: RegistrationSchema) => {
-    await registerUser(data);
+    try {
+      await registerUser(data).unwrap();
+    } catch (error) {
+      const apiError = error as { message: string };
+      if (apiError.message && typeof apiError.message === "string") {
+        const errorArray = apiError.message.split(",");
+        errorArray.forEach((e) => {
+          if (e.includes("Password")) {
+            setError("password", { message: e });
+          } else if (e.includes("Email")) {
+            setError("email", { message: e });
+          }
+        });
+      }
+    }
   };
   return (
     <Container component={Paper} maxWidth="sm" sx={{ borderRadius: 3 }}>
