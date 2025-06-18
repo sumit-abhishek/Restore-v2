@@ -26,11 +26,13 @@ public static class BasketExtensions
             }).ToList()
         };
     }
-    public static async Task<Basket> GetBasketWithItems(this IQueryable<Basket> query, string? basketId)
+    public static async Task<Basket> GetBasketWithItems(this IQueryable<Basket> query,
+        string? basketId)
     {
         return await query
-.Include(x => x.Items)
-.ThenInclude(x => x.Product)
-.FirstOrDefaultAsync(x => x.BasketId == basketId) ?? throw new Exception("Basket not found");
+            .Include(x => x.Items)
+            .ThenInclude(x => x.Product)
+            .FirstOrDefaultAsync(x => x.BasketId == basketId)
+                ?? throw new Exception("Cannot get basket");
     }
 }
