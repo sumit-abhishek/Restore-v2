@@ -42,7 +42,6 @@ const rightLinks = [
 
 const NavBar = () => {
   const { data: user } = useUserInfoQuery();
-  console.log("USer", user);
   const dispatch = useAppDispatch();
   const { data: basket } = useFetchBasketQuery();
   const itemCount =
