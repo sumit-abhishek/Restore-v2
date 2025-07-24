@@ -6,12 +6,14 @@ import { Elements } from "@stripe/react-stripe-js";
 import { useFetchBasketQuery } from "../basket/basketApi";
 import { useEffect, useMemo, useRef } from "react";
 import { useCreatePaymentIntentMutation } from "./checkoutApi";
+import { useAppSelector } from "../../app/store/store";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK);
 export const CheckoutPage = () => {
   const { data: basket } = useFetchBasketQuery();
   const create = useRef(false);
   const [createPaymentIntent, { isLoading }] = useCreatePaymentIntentMutation();
+  const { darkMode } = useAppSelector((state) => state.ui);
 
   useEffect(() => {
     if (!create.current) createPaymentIntent();
@@ -21,12 +23,16 @@ export const CheckoutPage = () => {
     if (!basket?.clientSecret) return undefined;
     return {
       clientSecret: basket.clientSecret,
+      appearance: {
+        labels: "floating",
+        theme: darkMode ? "night" : "stripe",
+      },
     };
-  }, [basket?.clientSecret]);
+  }, [basket?.clientSecret, darkMode]);
   return (
     <Grid2 container spacing={2}>
       <Grid2 size={8}>
-        {!stripePromise || options || isLoading ? (
+        {!stripePromise || !options || isLoading ? (
           <Typography variant="h6">Loading Checkout...</Typography>
         ) : (
           <Elements stripe={stripePromise} options={options}>
