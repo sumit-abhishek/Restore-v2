@@ -27,7 +27,7 @@ export const checkoutApi = createApi({
             )
           );
         } catch (error) {
-          console.log("Payment intent creation failed:", error);
+          console.log("Payment intent creation failed: ", error);
         }
       },
     }),

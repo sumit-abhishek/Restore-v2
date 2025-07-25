@@ -10,15 +10,17 @@ import { useAppSelector } from "../../app/store/store";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK);
 export const CheckoutPage = () => {
-  const { data: basket } = useFetchBasketQuery();
+  const { data: basket, isLoading: basketLoading } = useFetchBasketQuery();
   const create = useRef(false);
   const [createPaymentIntent, { isLoading }] = useCreatePaymentIntentMutation();
   const { darkMode } = useAppSelector((state) => state.ui);
 
   useEffect(() => {
-    if (!create.current) createPaymentIntent();
-    create.current = true;
-  }, [createPaymentIntent]);
+    if (!create.current) {
+      createPaymentIntent();
+      create.current = true;
+    }
+  }, [basket, createPaymentIntent]);
   const options: StripeElementsOptions | undefined = useMemo(() => {
     if (!basket?.clientSecret) return undefined;
     return {
@@ -32,7 +34,7 @@ export const CheckoutPage = () => {
   return (
     <Grid2 container spacing={2}>
       <Grid2 size={8}>
-        {!stripePromise || !options || isLoading ? (
+        {!stripePromise || !options || isLoading || basketLoading ? (
           <Typography variant="h6">Loading Checkout...</Typography>
         ) : (
           <Elements stripe={stripePromise} options={options}>
