@@ -10,26 +10,18 @@ import { useAppSelector } from "../../app/store/store";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK);
 export const CheckoutPage = () => {
-  const {
-    data: basket,
-    isLoading: basketLoading,
-    refetch,
-  } = useFetchBasketQuery();
-  const create = useRef(false);
+  const { data: basket } = useFetchBasketQuery();
+  const created = useRef(false);
   const [createPaymentIntent, { isLoading }] = useCreatePaymentIntentMutation();
   const { darkMode } = useAppSelector((state) => state.ui);
-
   useEffect(() => {
-    if (!create.current) {
-      createPaymentIntent().then(() => {
-        refetch();
-      });
-      create.current = true;
-    }
-  }, [basket, createPaymentIntent]);
+    if (!created.current) createPaymentIntent();
+    created.current = true;
+  }, [createPaymentIntent]);
+
   const options: StripeElementsOptions | undefined = useMemo(() => {
+    console.log("Client Secret", basket?.clientSecret);
     if (!basket?.clientSecret) return undefined;
-    console.log("Basket Client Secret", basket.clientSecret);
     return {
       clientSecret: basket.clientSecret,
       appearance: {
@@ -41,7 +33,7 @@ export const CheckoutPage = () => {
   return (
     <Grid2 container spacing={2}>
       <Grid2 size={8}>
-        {!stripePromise || !options || isLoading || basketLoading ? (
+        {!stripePromise || !options || isLoading ? (
           <Typography variant="h6">Loading Checkout...</Typography>
         ) : (
           <Elements stripe={stripePromise} options={options}>
