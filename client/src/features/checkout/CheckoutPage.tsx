@@ -20,7 +20,6 @@ export const CheckoutPage = () => {
   }, [createPaymentIntent]);
 
   const options: StripeElementsOptions | undefined = useMemo(() => {
-    console.log("Client Secret", basket?.clientSecret);
     if (!basket?.clientSecret) return undefined;
     return {
       clientSecret: basket.clientSecret,

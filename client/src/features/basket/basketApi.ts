@@ -49,11 +49,7 @@ export const basketApi = createApi({
                 draft.items.push(
                   isBasketItem(product)
                     ? product
-                    : {
-                        ...product,
-                        productId: product.id,
-                        quantity,
-                      }
+                    : { ...product, productId: product.id, quantity }
                 );
             }
           })

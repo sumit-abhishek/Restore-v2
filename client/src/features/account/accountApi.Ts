@@ -53,7 +53,7 @@ export const accountApi = createApi({
         url: "account/address",
       }),
     }),
-    updateUserAddress: builder.query<Address, Address>({
+    updateUserAddress: builder.mutation<Address, Address>({
       query: (address) => ({
         url: "account/address",
         method: "POST",
@@ -87,5 +87,5 @@ export const {
   useUserInfoQuery,
   useLazyUserInfoQuery,
   useFetchAddressQuery,
-  useUpdateUserAddressQuery,
+  useUpdateUserAddressMutation,
 } = accountApi;
