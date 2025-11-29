@@ -19,7 +19,7 @@ public class PaymentsController(PaymentService paymentService, StoreContext cont
         var intent = await paymentService.CreateOrUpdatePaymentIntent(basket);
         if (intent == null) return BadRequest("Problem Creating Payment Intent");
         basket.PaymentIntentId ??= intent.Id;
-        basket.ClientSecret = intent.ClientSecret;
+        basket.ClientSecret ??= intent.ClientSecret;
         if (context.ChangeTracker.HasChanges())
         {
             var result = await context.SaveChangesAsync() > 0;
