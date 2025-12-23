@@ -1,4 +1,5 @@
-﻿using API.Data;
+﻿using System.Globalization;
+using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Entities.OrderAggregate;
@@ -36,7 +37,7 @@ namespace API.Controllers
         public async Task<ActionResult> CreateOrder(CreateOrderDto orderDto)
         {
             var basket = await context.Baskets.GetBasketWithItems(Request.Cookies["basketId"]);
-            if(basket == null) return BadRequest("Basket is empty or not found");
+            if(basket == null || basket.Items.Count==0||string.IsNullOrEmpty(basket.PaymentIntentId)) return BadRequest("Basket is empty or not found");
             var items = CreateOrderItems(basket.Items);
             if (items == null) return BadRequest("Some Item out of stock");
             var subTotal=items.Sum(x => x.Price * x.Quantity);
@@ -46,7 +47,7 @@ namespace API.Controllers
                 BuyerEmail = User.GetUsername(),
                 ShippingAddress = orderDto.ShippingAddress,
                 Subtotal = subTotal,
-                DeliveryFee = (long)deliveryFee,
+                DeliveryFee = Convert.ToInt64( deliveryFee),
                 PaymentIntentId = basket.PaymentIntentId,
                 PaymentSummary = orderDto.PaymentSummary
             };

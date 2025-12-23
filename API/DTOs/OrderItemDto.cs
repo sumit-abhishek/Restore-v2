@@ -1,0 +1,13 @@
+﻿using API.Entities.OrderAggregate;
+
+namespace API.DTOs
+{
+    public class OrderItemDto
+    {
+        public int ProductId { get; set; }
+        public required string Name { get; set; }
+        public required string PictureUrl { get; set; }
+        public long Price { get; set; }
+        public int Qunatity { get; set; }
+    }
+}
