@@ -11,22 +11,23 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers
 {
     [Authorize]
-    public class OrderController(StoreContext context):BaseApiController
+    public class OrdersController(StoreContext context):BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<List<Order>>> GetOrder()
+        public async Task<ActionResult<List<OrderDto>>> GetOrder()
         {
             var orders = await context.Orders
-                .Include(x => x.OrderItems)
+                .ProjectToDto()
                 .Where(x => x.BuyerEmail == User.GetUsername())
                 .ToListAsync();
             return orders;
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Order>> GetOrderDetails(int id)
+        public async Task<ActionResult<OrderDto>> GetOrderDetails(int id)
         {
             var order = await context.Orders
+                .ProjectToDto()
                 .Where(x => x.BuyerEmail == User.GetUsername() && x.Id == id)
                 .FirstOrDefaultAsync();
             if (order == null) return NotFound();
@@ -56,7 +57,7 @@ namespace API.Controllers
             Response.Cookies.Delete("basketId");
             var result = await context.SaveChangesAsync() > 0;
             if (!result) return BadRequest("Problem Creating Order");
-            return CreatedAtAction(nameof(GetOrderDetails), new { id = order.Id }, order);
+            return CreatedAtAction(nameof(GetOrderDetails), new { id = order.Id }, order.ToDto());
         }
 
         private object CalculateDeliveryFee(long subTotal)
