@@ -18,6 +18,7 @@ import LoginForm from "../../features/account/LoginForm";
 import RegistrationForm from "../../features/account/RegistrationForm";
 import RequiredAuth from "./RequiredAuth";
 import CheckoutSuccess from "../../features/checkout/CheckoutSuccess";
+import OrdersPage from "../../features/orders/OrdersPage";
 
 export const router = createBrowserRouter(
   [
@@ -30,6 +31,7 @@ export const router = createBrowserRouter(
           children: [
             { path: "checkout", element: <CheckoutPage /> },
             { path: "checkout/success", element: <CheckoutSuccess /> },
+            { path: "orders", element: <OrdersPage /> },
           ],
         },
         { path: "", element: <HomePage /> },
@@ -54,5 +56,5 @@ export const router = createBrowserRouter(
       v7_partialHydration: true,
       v7_skipActionErrorRevalidation: true,
     },
-  }
+  },
 );
