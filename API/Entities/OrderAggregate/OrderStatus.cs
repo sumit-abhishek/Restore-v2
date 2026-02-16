@@ -6,6 +6,8 @@
 
         PaymentReceived,
 
-        PaymentFailed
+        PaymentFailed,
+
+        PaymentMismatch
     }
 }

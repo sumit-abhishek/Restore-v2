@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers
 {
     [Authorize]
-    public class OrdersController(StoreContext context):BaseApiController
+    public class OrdersController(StoreContext context) : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<List<OrderDto>>> GetOrder()
@@ -38,23 +38,34 @@ namespace API.Controllers
         public async Task<ActionResult> CreateOrder(CreateOrderDto orderDto)
         {
             var basket = await context.Baskets.GetBasketWithItems(Request.Cookies["basketId"]);
-            if(basket == null || basket.Items.Count==0||string.IsNullOrEmpty(basket.PaymentIntentId)) return BadRequest("Basket is empty or not found");
+            if (basket == null || basket.Items.Count == 0 || string.IsNullOrEmpty(basket.PaymentIntentId)) return BadRequest("Basket is empty or not found");
             var items = CreateOrderItems(basket.Items);
             if (items == null) return BadRequest("Some Item out of stock");
-            var subTotal=items.Sum(x => x.Price * x.Quantity);
+            var subTotal = items.Sum(x => x.Price * x.Quantity);
             var deliveryFee = CalculateDeliveryFee(subTotal);
-            var order= new Order {
-                OrderItems = items,
-                BuyerEmail = User.GetUsername(),
-                ShippingAddress = orderDto.ShippingAddress,
-                Subtotal = subTotal,
-                DeliveryFee = Convert.ToInt64( deliveryFee),
-                PaymentIntentId = basket.PaymentIntentId,
-                PaymentSummary = orderDto.PaymentSummary
-            };
-            context.Orders.Add(order);
-            context.Baskets.Remove(basket);
-            Response.Cookies.Delete("basketId");
+
+            var order = await context.Orders
+                .Include(x => x.OrderItems)
+                .FirstOrDefaultAsync(x => x.PaymentIntentId == basket.PaymentIntentId);
+            if (order == null)
+            {
+                order = new Order
+                {
+                    OrderItems = items,
+                    BuyerEmail = User.GetUsername(),
+                    ShippingAddress = orderDto.ShippingAddress,
+                    Subtotal = subTotal,
+                    DeliveryFee = Convert.ToInt64(deliveryFee),
+                    PaymentIntentId = basket.PaymentIntentId,
+                    PaymentSummary = orderDto.PaymentSummary
+                };
+                context.Orders.Add(order);
+            }
+            else
+            {
+                order.OrderItems = items;
+            }
+
             var result = await context.SaveChangesAsync() > 0;
             if (!result) return BadRequest("Problem Creating Order");
             return CreatedAtAction(nameof(GetOrderDetails), new { id = order.Id }, order.ToDto());
@@ -81,11 +92,11 @@ namespace API.Controllers
                     },
                     Price = item.Product.Price,
                     Quantity = item.Quantity
-                }; 
+                };
                 orderItems.Add(orderItem);
                 item.Product.QuantityInStock -= item.Quantity;
             }
-            return orderItems;  
+            return orderItems;
         }
     }
 }

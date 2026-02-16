@@ -1,9 +1,4 @@
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Navigate,
-  Route,
-} from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "../layout/App";
 import HomePage from "../../features/home/HomePage";
 import Catalog from "../../features/catalog/Catalog";
@@ -19,6 +14,7 @@ import RegistrationForm from "../../features/account/RegistrationForm";
 import RequiredAuth from "./RequiredAuth";
 import CheckoutSuccess from "../../features/checkout/CheckoutSuccess";
 import OrdersPage from "../../features/orders/OrdersPage";
+import OrderDetailedPage from "../../features/orders/OrderDetailedPage";
 
 export const router = createBrowserRouter(
   [
@@ -32,6 +28,7 @@ export const router = createBrowserRouter(
             { path: "checkout", element: <CheckoutPage /> },
             { path: "checkout/success", element: <CheckoutSuccess /> },
             { path: "orders", element: <OrdersPage /> },
+            { path: "orders/:id", element: <OrderDetailedPage /> },
           ],
         },
         { path: "", element: <HomePage /> },
