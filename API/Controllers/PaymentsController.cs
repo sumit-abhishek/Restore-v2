@@ -101,7 +101,7 @@ public class PaymentsController(PaymentService paymentService,
         try
         {
             return EventUtility.ConstructEvent(json,
-                Request.Headers["Stripe-Signature"], config["StripeSettings:WhSecret"]);
+                Request.Headers["Stripe-Signature"], config["StripeSetting:WhSecret"], throwOnApiVersionMismatch: false);
         }
         catch (Exception ex)
         {
