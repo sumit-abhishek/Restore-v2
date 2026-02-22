@@ -28,7 +28,8 @@ jobs:
           cd client
           npm install --legacy-peer-deps
           npm run build
-
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
