@@ -51,7 +51,7 @@ export default function CheckoutStepper() {
 
   let name, restaddress;
   if (data) {
-    ({ name, ...restaddress } = data);
+    ({ name, ...restaddress } = data ??{});
   }
 
   const handleNext = async () => {
