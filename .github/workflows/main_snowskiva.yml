@@ -21,7 +21,7 @@ jobs:
       - name: Set up node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install deps and build client app
         run: |
@@ -30,11 +30,12 @@ jobs:
           npm run build
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_STRIPE_PK: ${{ secrets.VITE_STRIPE_PK }}
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '3.1'
+          dotnet-version: "3.1"
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
@@ -60,7 +61,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -72,7 +73,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'snowskiva'
-          slot-name: 'Production'
+          app-name: "snowskiva"
+          slot-name: "Production"
           package: .
-          
