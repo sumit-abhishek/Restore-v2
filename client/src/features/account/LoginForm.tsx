@@ -29,9 +29,9 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const [fetchUserInfo] = useLazyUserInfoQuery();
   const onSubmit = async (data: LoginSchema) => {
-    await login(data);
+    await login(data)
     await fetchUserInfo();
-    navigate(location.state.from || "/catalog");
+    navigate(location.state?.from || "/catalog");
   };
   return (
     <Container component={Paper} maxWidth="sm" sx={{ borderRadius: 3 }}>
