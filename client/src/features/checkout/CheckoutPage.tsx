@@ -4,7 +4,7 @@ import CheckoutStepper from "./CheckoutStepper";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { useFetchBasketQuery } from "../basket/basketApi";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useCreatePaymentIntentMutation } from "./checkoutApi";
 import { useAppSelector } from "../../app/store/store";
 
@@ -14,8 +14,9 @@ export const CheckoutPage = () => {
   const created = useRef(false);
   const [createPaymentIntent, { isLoading }] = useCreatePaymentIntentMutation();
   const { darkMode } = useAppSelector((state) => state.ui);
+  const [ready, setReady] = useState(false);
   useEffect(() => {
-    if (!created.current) createPaymentIntent();
+    if (!created.current) createPaymentIntent().finally(()=>setReady(true));
     created.current = true;
   }, [createPaymentIntent]);
 
@@ -32,7 +33,7 @@ export const CheckoutPage = () => {
   return (
     <Grid2 container spacing={2}>
       <Grid2 size={8}>
-        {!stripePromise || !options || isLoading ? (
+        {!stripePromise || !options || !ready || isLoading ? (
           <Typography variant="h6">Loading Checkout...</Typography>
         ) : (
           <Elements stripe={stripePromise} options={options}>
